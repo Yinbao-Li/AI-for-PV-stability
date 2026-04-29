@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>References — PV Stability Review</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --primary: #1a73e8; --border: #dadce0; --bg: #f8f9fa; --text: #202124; --muted: #5f6368; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        .header { background: linear-gradient(135deg,var(--primary),#1557b0); color: white; padding: 40px 0; }
+        .header h1 { font-size: 1.6rem; }
+        .header a { color: #8ab4f8; text-decoration: none; }
+
+        .nav-bar { background: white; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+        .nav-bar .container { display: flex; overflow-x: auto; }
+        .nav-bar a { display: block; padding: 14px 18px; color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; white-space: nowrap; border-bottom: 2px solid transparent; transition: 0.2s; }
+        .nav-bar a.active, .nav-bar a:hover { color: var(--primary); border-bottom-color: var(--primary); }
+
+        .search-section { padding: 24px 0; }
+        .search-box { display: flex; gap: 12px; }
+        .search-box input { flex: 1; padding: 12px 16px; border: 2px solid var(--border); border-radius: 8px; font-size: 1rem; outline: none; }
+        .search-box input:focus { border-color: var(--primary); }
+        .search-box button { padding: 12px 24px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; }
+
+        .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+        .filter-btn { padding: 6px 14px; border-radius: 16px; border: 1px solid var(--border); background: white; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .filter-btn:hover { border-color: var(--primary); }
+
+        .ref-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .ref-table th { background: var(--primary); color: white; padding: 10px 12px; text-align: left; position: sticky; top: 57px; cursor: pointer; }
+        .ref-table th:hover { background: #1557b0; }
+        .ref-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+        .ref-table tr:hover td { background: #f0f4ff; }
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 8px; font-size: 0.7rem; font-weight: 500; }
+
+        footer { background: var(--text); color: white; padding: 24px 0; text-align: center; font-size: 0.85rem; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="container">
+        <h1><a href="../"><i class="fas fa-arrow-left"></i> Back to Overview</a> — References (69 Publications)</h1>
+    </div>
+</div>
+
+<div class="nav-bar">
+    <div class="container">
+        <a href="../">Overview</a>
+        <a href="../degradation/">Degradation</a>
+        <a href="../material-engineering/">Material</a>
+        <a href="../process/">Process</a>
+        <a href="../interface/">Interface</a>
+        <a href="../encapsulation/">Encapsulation</a>
+        <a href="../ml-methods/">ML</a>
+        <a href="../data-infrastructure/">Data</a>
+        <a href="" class="active">References</a>
+    </div>
+</div>
+
+<div class="container">
+
+<div class="search-section">
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search title, author, keyword..." />
+        <button onclick="doSearch()"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="filter-bar" id="filterBar"></div>
+</div>
+
+<div style="overflow-x:auto">
+<table class="ref-table" id="refTable">
+    <thead>
+        <tr>
+            <th onclick="sortTable(0)">#</th>
+            <th onclick="sortTable(1)">Title</th>
+            <th onclick="sortTable(2)">Authors</th>
+            <th onclick="sortTable(3)">Year</th>
+            <th onclick="sortTable(4)">Category</th>
+        </tr>
+    </thead>
+    <tbody id="refBody"></tbody>
+</table>
+</div>
+</div>
+
+<footer><div class="container">PV Stability Living Review · 69 publications</div></footer>
+
+<script>
+// 69 references with standard academic info
+const PAPERS = [
+    {id:1,t:"Compositional and morphological changes in water-induced early-stage degradation in lead halide perovskites", a:"Y. Wang et al.", y:2020, c:"Degradation"},
+    {id:2,t:"From defects to degradation: A mechanistic understanding of degradation in perovskite solar cell devices and modules", a:"N. Ahn et al.", y:2023, c:"Degradation"},
+    {id:3,t:"Improved reverse bias stability in p–i–n perovskite solar cells with optimized hole transport materials and less reactive electrodes", a:"S. Wu et al.", y:2023, c:"Degradation"},
+    {id:4,t:"Is Cu a stable electrode material in hybrid perovskite solar cells for a 30-year lifetime?", a:"K. Domanski et al.", y:2017, c:"Degradation"},
+    {id:5,t:"Metal oxide barrier layers for terrestrial and space perovskite photovoltaics", a:"L. La Notte et al.", y:2023, c:"Degradation"},
+    {id:6,t:"Simultaneous enhancement in performance and UV-light stability using samarium-based down conversion", a:"Y. Zhou et al.", y:2019, c:"Degradation"},
+    {id:7,t:"Perovskite solar cells: Progress, challenges, and future avenues to clean energy", a:"M. Afroz et al.", y:2025, c:"Compositional Engineering"},
+    {id:8,t:"Centimetre-scale perovskite solar cells with fill factors of more than 86 per cent", a:"J. Jeong et al.", y:2022, c:"Compositional Engineering"},
+    {id:9,t:"Cesium lead halide perovskites with improved stability for tandem solar cells", a:"R. E. Beal et al.", y:2016, c:"Compositional Engineering"},
+    {id:10,t:"Cl alloying improves thermal stability and increases luminescence in iodine-rich inorganic perovskites", a:"L. Sun et al.", y:2023, c:"Compositional Engineering"},
+    {id:11,t:"Cs2TiI6: A potential lead-free all-inorganic perovskite for ultrahigh-performance photovoltaics", a:"M. G. Ju et al.", y:2018, c:"Compositional Engineering"},
+    {id:12,t:"Density functional study of cubic, tetragonal, and orthorhombic CsPbBr3 perovskite", a:"S. Guo et al.", y:2022, c:"Compositional Engineering"},
+    {id:13,t:"Extracting in situ charge carrier diffusion parameters in perovskite solar cells", a:"M. Stolterfoht et al.", y:2019, c:"Compositional Engineering"},
+    {id:14,t:"Halide perovskites: Current issues and new strategies to push material and device stability", a:"D. Di Girolamo et al.", y:2022, c:"Compositional Engineering"},
+    {id:15,t:"Improving the stability of inverted perovskite solar cells towards commercialization", a:"S. Bai et al.", y:2023, c:"Compositional Engineering"},
+    {id:16,t:"Long-range charge carrier mobility in metal halide perovskite thin-films and single crystals", a:"D. W. deQuilettes et al.", y:2021, c:"Compositional Engineering"},
+    {id:17,t:"Low-cost and highly efficient carbon-based perovskite solar cells with excellent long-term operational and UV stability", a:"S. Ito et al.", y:2019, c:"Compositional Engineering"},
+    {id:18,t:"Machine learning for perovskite materials design and discovery", a:"A. Stuke et al.", y:2023, c:"Compositional Engineering"},
+    {id:19,t:"Mobile iodides capture for highly photolysis- and reverse-bias-stable perovskite solar cells", a:"T. Zhang et al.", y:2023, c:"Compositional Engineering"},
+    {id:20,t:"Piperazine suppresses self-doping in CsSnI3 perovskite solar cells", a:"J. Li et al.", y:2023, c:"Compositional Engineering"},
+    {id:21,t:"Stability and performance enhancement of perovskite solar cells: A review", a:"N. K. Elumalai et al.", y:2021, c:"Compositional Engineering"},
+    {id:22,t:"Stability and reliability of perovskite containing solar cells and modules: Degradation mechanisms and mitigation", a:"J. Park et al.", y:2023, c:"Compositional Engineering"},
+    {id:23,t:"Steric impediment of ion migration contributes to improved operational stability", a:"Y. Zhao et al.", y:2023, c:"Compositional Engineering"},
+    {id:24,t:"Surface passivation engineering strategy to fully-inorganic cubic CsPbI3 perovskites", a:"Y. Wang et al.", y:2022, c:"Compositional Engineering"},
+    {id:25,t:"Temperature dependence of photoinduced phase segregation in bromide-rich mixed halide perovskites", a:"J. S. Park et al.", y:2020, c:"Compositional Engineering"},
+    {id:26,t:"The stability of CsPb(Br_xCl_{1−x})_3 all-inorganic mixed halide perovskites", a:"S. Chen et al.", y:2020, c:"Compositional Engineering"},
+    {id:27,t:"Towards operation-stabilizing perovskite solar cells: Fundamental materials, device designs, and commercial applications", a:"J. Qin et al.", y:2023, c:"Compositional Engineering"},
+    {id:28,t:"Unraveling the impact of halide mixing on crystallization and phase evolution in CsPbX3", a:"S. Liu et al.", y:2024, c:"Compositional Engineering"},
+    {id:29,t:"Versatile hole selective molecules as self-assembled monolayers for efficient p-i-n perovskite and organic solar cells", a:"M. Saraf et al.", y:2022, c:"Compositional Engineering"},
+    {id:30,t:"基于机器学习探索钙钛矿材料及其应用 (ML for perovskite materials)", a:"Q. Hu et al.", y:2023, c:"Compositional Engineering"},
+    {id:31,t:"An 80.11% FF record achieved for perovskite solar cells by using the NH4Cl additive", a:"W. Zhou et al.", y:2023, c:"Crystallization"},
+    {id:32,t:"Multifunctional molecular modulators for perovskite solar cells with over 20% efficiency and high operational stability", a:"H. Kim et al.", y:2022, c:"Crystallization"},
+    {id:33,t:"Rapid, stable and self-powered perovskite detectors via a fast chemical vapor deposition process", a:"Y. Wang et al.", y:2022, c:"Crystallization"},
+    {id:34,t:"Recent progress on advanced TEM characterization for halide perovskite semiconductors", a:"P. Zhang et al.", y:2022, c:"Crystallization"},
+    {id:35,t:"Solvent engineering for high-performance inorganic–organic hybrid perovskite solar cells", a:"N. J. Jeon et al.", y:2014, c:"Crystallization"},
+    {id:36,t:"A transparent conductive adhesive laminate electrode for high-efficiency perovskite solar cells", a:"Y. Li et al.", y:2022, c:"Tin-based"},
+    {id:37,t:"Conjugated organic cations enable efficient self-healing FASnI3 solar cells", a:"Z. Wang et al.", y:2022, c:"Tin-based"},
+    {id:38,t:"The role of perovskite composition, dimensionality, and additives in lead-free PSC longevity: A review", a:"L. J. Diguna et al.", y:2025, c:"Tin-based"},
+    {id:39,t:"Efficiency-enhancement of lead-free ASnI2Br PSCs by phenyltrihydrosilane passivation", a:"Q. Zhu et al.", y:2023, c:"Tin-based"},
+    {id:40,t:"Efficient environment-friendly lead-free tin PSCs enabled by 4-fluorobenzylammonium iodide additives", a:"S. Li et al.", y:2023, c:"Tin-based"},
+    {id:41,t:"Efficient and stable tin-based PSCs by introducing π-conjugated Lewis base", a:"M. Chen et al.", y:2023, c:"Tin-based"},
+    {id:42,t:"Enhanced performance of tin-based PSCs induced by an ammonium hypophosphite additive", a:"M. Liao et al.", y:2023, c:"Tin-based"},
+    {id:43,t:"Enhanced photovoltaic performance and stability with hollow 3D perovskite {en}FASnI3", a:"C. Wang et al.", y:2023, c:"Tin-based"},
+    {id:44,t:"Fluoride chemistry in tin halide perovskites", a:"S. Lee et al.", y:2023, c:"Tin-based"},
+    {id:45,t:"Highly stable and efficient all-inorganic lead-free PSCs with native-oxide passivation", a:"T. Wu et al.", y:2022, c:"Tin-based"},
+    {id:46,t:"Illumination durability and high-efficiency Sn-based PSC under coordinated control of phenylhydrazine and halide ions", a:"J. Yang et al.", y:2023, c:"Tin-based"},
+    {id:47,t:"Importance of reducing vapor atmosphere in the fabrication of tin-based PSCs", a:"H. Yao et al.", y:2023, c:"Tin-based"},
+    {id:48,t:"Improving performance of lead-free FASnI3 PSCs by tin source purification", a:"Z. Zhang et al.", y:2023, c:"Tin-based"},
+    {id:49,t:"Increasing efficiency of PSCs using low concentrating photovoltaic systems", a:"S. K. Balasingam et al.", y:2023, c:"Tin-based"},
+    {id:50,t:"Optoelectronic properties of tin–lead halide perovskites", a:"R. C. Hill et al.", y:2022, c:"Tin-based"},
+    {id:51,t:"Realizing efficient lead-free FASnI3 PSCs via a sequential deposition route", a:"X. Liu et al.", y:2023, c:"Tin-based"},
+    {id:52,t:"Recent prospects of medical imaging and sensing technologies based on electrical impedance data acquisition", a:"A. Kumar et al.", y:2023, c:"Tin-based"},
+    {id:53,t:"Self-repairing tin-based PSCs with a breakthrough efficiency over 11%", a:"M. Li et al.", y:2023, c:"Tin-based"},
+    {id:54,t:"Sn(IV)-free tin perovskite films realized by in situ Sn(0) nanoparticle treatment", a:"T. Zhang et al.", y:2023, c:"Tin-based"},
+    {id:55,t:"Stabilizing lead-free all-inorganic tin halide perovskites by ion exchange", a:"X. He et al.", y:2023, c:"Tin-based"},
+    {id:56,t:"Surface-controlled oriented growth of FASnI3 crystals for efficient lead-free PSCs", a:"J. Liu et al.", y:2023, c:"Tin-based"},
+    {id:57,t:"The role of SnF2 additive on interface formation in all lead-free FASnI3 PSCs", a:"J. Li et al.", y:2023, c:"Tin-based"},
+    {id:58,t:"Scalable nanomanufacturing: A review", a:"J. A. Lewis", y:2022, c:"Process"},
+    {id:59,t:"Advanced characterization and optimization of NiOx-Cu SAM bi-layer for 23.4% efficient CIGS-perovskite tandem solar cells", a:"M. Jošt et al.", y:2023, c:"HTL Engineering"},
+    {id:60,t:"Evaporated self-assembled monolayer hole transport layers: Lossless interfaces in p-i-n PSCs", a:"J. Xu et al.", y:2023, c:"HTL Engineering"},
+    {id:61,t:"An interface stabilized PSC with high stabilized efficiency and low voltage loss", a:"S. Tan et al.", y:2022, c:"Interface"},
+    {id:62,t:"Comparative 1D optoelectrical simulation of the perovskite solar cell", a:"A. Y. Elshazly et al.", y:2021, c:"Interface"},
+    {id:63,t:"Progress toward stable lead halide perovskite solar cells", a:"Q. Dong et al.", y:2022, c:"Interface"},
+    {id:64,t:"Revealing degradation mechanisms in 3D/2D perovskite solar cells under photothermal accelerated ageing", a:"A. Krishna et al.", y:2023, c:"Interface"},
+    {id:65,t:"Review on sol-gel synthesis of perovskite and oxide nanomaterials", a:"S. K. Sahoo et al.", y:2023, c:"Interface"},
+    {id:66,t:"Suppressed decomposition of organometal halide perovskites by impermeable electron-extraction layers", a:"J. H. Heo et al.", y:2020, c:"Interface"},
+    {id:67,t:"Unraveling the chemical nature of the 3D hollow hybrid halide perovskites", a:"D. Chen et al.", y:2022, c:"Interface"},
+    {id:68,t:"Illumination intensity dependence of the recombination mechanism in mixed perovskite solar cells", a:"T. Kirchartz et al.", y:2020, c:"Interface"},
+    {id:69,t:"Residual film stresses in perovskite solar cells: Origins, effects, and mitigation strategies", a:"N. Rolston et al.", y:2022, c:"Interface"},
+];
+
+const CATEGORIES = [...new Set(PAPERS.map(p=>p.c))];
+
+function renderFilterBar() {
+    const bar = document.getElementById('filterBar');
+    let html = '<button class="filter-btn active" data-cat="all" onclick="filterPapers(\'all\')">All</button>';
+    CATEGORIES.forEach(c => {
+        html += `<button class="filter-btn" data-cat="${c}" onclick="filterPapers('${c}')">${c}</button>`;
+    });
+    bar.innerHTML = html;
+}
+
+let currentFilter = 'all';
+let currentSearch = '';
+
+function renderTable(data) {
+    const tbody = document.getElementById('refBody');
+    tbody.innerHTML = data.map(p => `
+        <tr>
+            <td><span class="ref-number" style="display:inline-flex">${p.id}</span></td>
+            <td>${p.t}</td>
+            <td>${p.a}</td>
+            <td>${p.y}</td>
+            <td><span class="tag tag-${CATEGORIES.indexOf(p.c)%5+1}">${p.c}</span></td>
+        </tr>
+    `).join('');
+}
+
+function filterPapers(cat) {
+    currentFilter = cat;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+    applyFilters();
+}
+
+function doSearch() {
+    currentSearch = document.getElementById('searchInput').value.toLowerCase();
+    applyFilters();
+}
+
+function applyFilters() {
+    let filtered = PAPERS;
+    if (currentFilter !== 'all') filtered = filtered.filter(p => p.c === currentFilter);
+    if (currentSearch) filtered = filtered.filter(p => 
+        p.t.toLowerCase().includes(currentSearch) || 
+        p.a.toLowerCase().includes(currentSearch) ||
+        p.c.toLowerCase().includes(currentSearch)
+    );
+    renderTable(filtered);
+}
+
+let sortDir = {};
+function sortTable(col) {
+    const key = ['id','t','a','y','c'][col];
+    sortDir[col] = !(sortDir[col]||false);
+    const dir = sortDir[col] ? 1 : -1;
+    PAPERS.sort((a,b) => {
+        let va = a[key], vb = b[key];
+        if (typeof va === 'string') va = va.toLowerCase();
+        if (typeof vb === 'string') vb = vb.toLowerCase();
+        return va < vb ? -dir : va > vb ? dir : 0;
+    });
+    applyFilters();
+}
+
+renderFilterBar();
+renderTable(PAPERS);
+</script>
+</body>
+</html>

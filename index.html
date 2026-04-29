@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI for PV Stability Study — Living Review</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a73e8;
+            --accent: #34a853;
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --text: #202124;
+            --muted: #5f6368;
+            --border: #dadce0;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary), #1557b0);
+            color: white;
+            padding: 60px 0 40px;
+        }
+        .header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 8px; }
+        .header .subtitle { font-size: 1.1rem; opacity: 0.9; }
+        .header .meta { margin-top: 16px; font-size: 0.9rem; opacity: 0.8; }
+        .header .meta i { margin-right: 6px; }
+
+        /* Navigation */
+        .nav-bar {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .nav-bar .container {
+            display: flex; overflow-x: auto; gap: 0;
+        }
+        .nav-bar a {
+            display: block; padding: 14px 18px;
+            color: var(--muted); text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            white-space: nowrap; border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .nav-bar a:hover, .nav-bar a.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Overview Cards */
+        .overview-section { padding: 40px 0; }
+        .overview-section h2 {
+            font-size: 1.6rem; margin-bottom: 24px;
+            color: var(--primary);
+        }
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+        .card h3 a { color: var(--primary); text-decoration: none; }
+        .card h3 a:hover { text-decoration: underline; }
+        .card p { font-size: 0.9rem; color: var(--muted); margin-bottom: 12px; }
+        .card .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: #e8f0fe;
+            color: var(--primary);
+        }
+        .card .stat {
+            display: inline-block; margin-left: 8px;
+            font-size: 0.8rem; color: var(--muted);
+        }
+
+        .section-content { padding: 40px 0; }
+        .section-content h2 {
+            font-size: 1.6rem; color: var(--primary);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px; margin-bottom: 24px;
+        }
+        .section-content h3 {
+            font-size: 1.2rem; margin: 24px 0 12px;
+            color: var(--text);
+        }
+        .section-content p { margin-bottom: 16px; text-align: justify; }
+        .section-content .ref-list { list-style: none; padding: 0; }
+        .section-content .ref-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.88rem;
+        }
+        .ref-number {
+            display: inline-block;
+            width: 28px; height: 28px; line-height: 28px;
+            text-align: center;
+            border-radius: 50%;
+            background: #e8f0fe;
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        .ref-table {
+            width: 100%; border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        .ref-table th {
+            background: var(--primary); color: white;
+            padding: 10px 12px; text-align: left;
+            position: sticky; top: 57px;
+        }
+        .ref-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .ref-table tr:hover td { background: #f0f4ff; }
+        .ref-table .tag {
+            display: inline-block; padding: 2px 8px;
+            border-radius: 8px; font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .tag-1 { background: #fce8e6; color: #c5221f; }
+        .tag-2 { background: #e8f0fe; color: #1967d2; }
+        .tag-3 { background: #e6f4ea; color: #137333; }
+        .tag-4 { background: #fef7e0; color: #ea8600; }
+        .tag-5 { background: #f3e8fd; color: #9334e6; }
+
+        .footer {
+            background: var(--text); color: white;
+            padding: 32px 0; text-align: center;
+            font-size: 0.85rem; opacity: 0.8;
+        }
+
+        .search-box {
+            margin: 24px 0;
+            display: flex; gap: 12px;
+        }
+        .search-box input {
+            flex: 1; padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px; font-size: 1rem;
+            outline: none; transition: border-color 0.2s;
+        }
+        .search-box input:focus { border-color: var(--primary); }
+        .search-box button {
+            padding: 12px 24px; background: var(--primary);
+            color: white; border: none; border-radius: 8px;
+            cursor: pointer; font-size: 0.95rem;
+        }
+        .search-box button:hover { background: #1557b0; }
+
+        @media (max-width: 700px) {
+            .header h1 { font-size: 1.6rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            .nav-bar a { padding: 12px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="container">
+        <h1><i class="fas fa-sun"></i> AI for PV Stability Study</h1>
+        <div class="subtitle">A Living Literature Review — AI-Driven Stability Engineering for Perovskite Solar Cells</div>
+        <div class="meta">
+            <i class="fas fa-file-alt"></i> 69 publications · 8 categories
+            <span style="margin-left:16px"><i class="fas fa-calendar-alt"></i> Last updated: 2026-04-29</span>
+            <span style="margin-left:16px"><i class="fas fa-sync-alt"></i> Version 4 · Living Review</span>
+        </div>
+    </div>
+</div>
+
+<div class="nav-bar">
+    <div class="container">
+        <a href="index.html" class="active"><i class="fas fa-home"></i> Overview</a>
+        <a href="degradation/"><i class="fas fa-bolt"></i> Degradation</a>
+        <a href="material-engineering/"><i class="fas fa-flask"></i> Material Engineering</a>
+        <a href="process/"><i class="fas fa-industry"></i> Process</a>
+        <a href="interface/"><i class="fas fa-layer-group"></i> Interface</a>
+        <a href="encapsulation/"><i class="fas fa-shield-alt"></i> Encapsulation</a>
+        <a href="ml-methods/"><i class="fas fa-brain"></i> ML Methods</a>
+        <a href="data-infrastructure/"><i class="fas fa-database"></i> Data</a>
+        <a href="references/"><i class="fas fa-book"></i> References</a>
+    </div>
+</div>
+
+<div class="container">
+
+<div class="search-box">
+    <input type="text" id="searchInput" placeholder="Search papers, authors, keywords..." />
+    <button onclick="searchPapers()"><i class="fas fa-search"></i></button>
+</div>
+
+<div class="overview-section">
+    <h2><i class="fas fa-compass"></i> Categories Overview</h2>
+    <div class="card-grid" id="categoryGrid">
+        <!-- Cards populated by JS -->
+    </div>
+</div>
+
+<div class="overview-section">
+    <h2><i class="fas fa-chart-line"></i> Key Metrics at a Glance</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px" id="metricsGrid">
+    </div>
+</div>
+
+</div>
+
+<div class="footer">
+    <div class="container">
+        <p>AI for PV Stability Study — A Living Literature Review</p>
+        <p style="margin-top:8px">Maintained by Bob Lee · Based on 69 peer-reviewed publications</p>
+        <p style="margin-top:4px"><a href="https://github.com/lareina/pv-stability-review" style="color:#8ab4f8">GitHub</a></p>
+    </div>
+</div>
+
+<script>
+const CATEGORIES = [
+    { id: "degradation", icon: "fa-bolt", title: "Degradation Mechanisms", count: 6, color: "#c5221f", desc: "Moisture, thermal, photo-induced segregation, ion migration, reverse bias, and space radiation effects." },
+    { id: "compositional", icon: "fa-flask", title: "Compositional Engineering", count: 24, color: "#1967d2", desc: "A-site, B-site, and halide engineering; tolerance factor screening; DFT-accelerated discovery." },
+    { id: "crystallization", icon: "fa-cube", title: "Crystallization & Defect Control", count: 5, color: "#137333", desc: "Solvent engineering, additives, GIWAXS monitoring, ML-guided process optimisation." },
+    { id: "tin-based", icon: "fa-leaf", title: "Tin-based & Lead-free", count: 22, color: "#ea8600", desc: "Sn²⁺ oxidation, self-healing, hollow structures, anti-oxidation additives." },
+    { id: "deposition", icon: "fa-industry", title: "Deposition & Manufacturing", count: 1, color: "#9334e6", desc: "Scalable deposition, multi-fidelity Bayesian optimisation." },
+    { id: "htl", icon: "fa-plug", title: "HTL Engineering", count: 2, color: "#e8710a", desc: "NiOₓ:Cu, SAMs, evaporable HTLs, tandem cells." },
+    { id: "interface", icon: "fa-layer-group", title: "Interface Engineering", count: 9, color: "#018786", desc: "2D/3D capping, ion blocking, stress management, energy alignment." },
+    { id: "encapsulation", icon: "fa-shield-alt", title: "Encapsulation", count: "-", color: "#5f6368", desc: "Barrier stacks, UV management, ISOS/IEC standardised testing." },
+    { id: "ml", icon: "fa-brain", title: "ML Methods", count: "-", color: "#7b1fa2", desc: "GP regression, BO, GNNs, physics-informed models, inverse design." },
+    { id: "data", icon: "fa-database", title: "Data Infrastructure", count: "-", color: "#00695c", desc: "Stability labels, feature schemas, open databases, cross-study comparability." },
+];
+
+const METRICS = [
+    { label: "Publications Reviewed", value: "69", icon: "fa-file-alt" },
+    { label: "Categories", value: "8", icon: "fa-folder" },
+    { label: "Best T₈₀ (Lead-based)", value: ">2000 h", icon: "fa-clock" },
+    { label: "Best T₈₀ (Sn-based)", value: ">1000 h", icon: "fa-clock" },
+    { label: "Best Champion PCE", value: "26.1%", icon: "fa-percent" },
+    { label: "Best PCE (Sn-based)", value: ">11%", icon: "fa-percent" },
+];
+
+function renderCategories() {
+    const grid = document.getElementById('categoryGrid');
+    grid.innerHTML = CATEGORIES.map(c => `
+        <div class="card">
+            <h3><a href="${c.id}/"><i class="fas ${c.icon}" style="color:${c.color}"></i> ${c.title}</a></h3>
+            <p>${c.desc}</p>
+            <span class="badge">${c.count} papers</span>
+        </div>
+    `).join('');
+}
+
+function renderMetrics() {
+    const grid = document.getElementById('metricsGrid');
+    grid.innerHTML = METRICS.map(m => `
+        <div class="card" style="text-align:center;padding:20px">
+            <div style="font-size:2rem;color:var(--primary)"><i class="fas ${m.icon}"></i></div>
+            <div style="font-size:1.6rem;font-weight:700;margin:8px 0">${m.value}</div>
+            <div style="font-size:0.8rem;color:var(--muted)">${m.label}</div>
+        </div>
+    `).join('');
+}
+
+function searchPapers() {
+    const q = document.getElementById('searchInput').value.trim();
+    if (!q) return;
+    window.location.href = 'references/?q=' + encodeURIComponent(q);
+}
+
+renderCategories();
+renderMetrics();
+</script>
+</body>
+</html>
